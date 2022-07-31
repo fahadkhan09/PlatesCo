@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlatesCo</title>
+</head>
+<html>
+  <style>
+  
+    th,td {
+      border: 1px solid black;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 3px;
+    }
+    #addButton {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+    #addButton:hover{
+      color: white;
+      background-color: black;
+    }
+    table{
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+    button{
+      margin: 10px 10px 0px 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: rgb(230, 212, 147);
+      cursor: pointer;
+    }
+
+    button:hover{
+      color:white;
+      background-color: black;
+    }
+    #price{
+      background-color:green;
+      color: white;
+    }
+    #CalculationArea
+    {
+      display: none;
+    }
+
+
+  </style>
+  <body>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Code</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>Red Plate</td>
+        <td>R01</td>
+        <td>$32.95</td>
+        <td onclick="addProduct('R01')" id="addButton" class="btn btn-outline-secondary">Add</td>
+      </tr>
+      <tr>
+        <td>Green Plate</td>
+        <td>G01</td>
+        <td>$24.95</td>
+        <td onclick="addProduct('G01')" id="addButton" class="btn btn-outline-secondary">Add</td>
+      </tr>
+      <tr>
+        <td>Blue Plate</td>
+        <td>B01</td>
+        <td>$7.95</td>
+        <td onclick="addProduct('B01')" id="addButton" class="btn btn-outline-secondary">Add</td>
+      </tr>
+    </table>
+
+    <button type="button" onclick="result()" class="ButtonStyle">Result</button>
+    <button type="button" onclick="clearAll()" class="ButtonStyle">Clear</button>
+    
+    <table id="CalculationArea">
+      <tr>
+        <th>Products</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td id="product" />
+        <td id="price" />
+      </tr>
+    </table>
+
+    <script>
+      const rates = {
+        R01: 32.95,
+        G01: 24.95,
+        B01: 7.95,
+      };
+      const productWithOffer = 'R01';
+
+      const productId = document.getElementById("product");
+      const priceId = document.getElementById("price");
+      const CalculationArea=document.getElementById("CalculationArea");
+      const ratesObject = Object.entries(rates); //convert into Arrray [["RO1",32.95],["G01",24.95],["B01",7.95]]
+
+      let totalPurchase = 0, productsList = [];
+
+      function addProduct(productCode) {
+        CalculationArea.style.display='block'
+
+        totalPurchase += rates[productCode];
+        productsList.push({name: productCode, price: rates[productCode]});
+        const productWithOfferCount = productsList.filter((product) => product.name === productWithOffer).length;
+
+        if ((productWithOfferCount > 0) && (productWithOfferCount % 2 === 0)) {
+          totalPurchase -= rates[productWithOffer] / 2;
+        }
+       
+        productId.innerHTML = productsList.map(item => item.name)
+      }
+
+      function result() {
+        if (productsList.length > 0) {
+          if (totalPurchase < 50) {
+            totalPurchase += 4.95;
+          } else if (totalPurchase >= 50 && totalPurchase <= 90) {
+            totalPurchase += 2.95;
+          }
+          priceId.innerHTML = '$' + totalPurchase.toFixed(2)
+        }
+      }
+
+      function clearAll() {
+        productId.innerHTML=""
+        priceId.innerHTML=""
+        productsList = []
+        totalPurchase=0;
+        CalculationArea.style.display="none"
+
+      }
+
+    </script>
+  </body>
+</html>
